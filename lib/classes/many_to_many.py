@@ -1,31 +1,35 @@
+# Class to represent an Article with attributes for author, magazine, and title
 class Article:
+    # Class variable to store all instances of Article
     all = []
 
     def __init__(self, author, magazine, title):
+        # set the author of the article, set the magazine where the article is published, set the title of the article, add the article to the class variable all
         self.author = author
         self.magazine = magazine
         self.title = title
         Article.all.append(self)
 
-    # def __repr__(self):
-    #     return f"Article('{self.author}', '{self.magazine}', '{self.title}')"
-
-
+    # decorator to get the author of the article
     @property
     def author(self):
         return self._author
 
+    # settter decorator to set the author of the article 
     @author.setter
     def author(self, new_author):
+        # Check if the new_author is an instance of Author class
         if isinstance(new_author, Author):
             self._author = new_author
         else:
             return None
 
+    # decorator to get the magazine where the article is published
     @property
     def magazine(self):
         return self._magazine
 
+    # setter to set the magazine where the article is published
     @magazine.setter
     def magazine(self, new_magazine):
         if isinstance(new_magazine, Magazine):
@@ -60,15 +64,19 @@ class Author:
         if isinstance(new_name, str)and 0 < len(new_name) and not hasattr(self, "_name"):
             self._name = new_name
 
+    # method to get all articles written by the author
     def articles(self):
         return [article for article in Article.all if article.author == self]
 
+    #method to get all magazines where the author has contributed 
     def magazines(self):
         return list({article.magazine for article in self.articles()})
 
+    # method to add a new article to the authors list of articles 
     def add_article(self, magazine, title):
         return Article(self, magazine, title)
 
+    # method to get all topic areas where the author has contributed
     def topic_areas(self):
         if not self.articles():
             return None
@@ -81,9 +89,6 @@ class Magazine:
         self.name = name
         self.category = category
         Magazine.all.append(self)
-
-    # def __repr__(self):
-    #     return f"Magazine('{self.name}', '{self.category}')"
 
     @property
     def name(self):
@@ -103,18 +108,22 @@ class Magazine:
         if isinstance(new_category, str) and 0 < len(new_category):
             self._category = new_category
 
+    #method to get all articles published in the magazine 
     def articles(self):
         return [article for article in Article.all if article.magazine == self]
 
+    # method to get all contributors to the magazine 
     def contributors(self):
         return list({article.author for article in self.articles()})
 
+    # method to get all article titles published in the magazine
     def article_titles(self):
         articles = self.articles()
         if not articles:
             return None
         return [article.title for article in articles]
 
+    # method to get contributing authors who have contributed more than 2 articles 
     def contributing_authors(self):
         authors = {}
         for article in self.articles():
